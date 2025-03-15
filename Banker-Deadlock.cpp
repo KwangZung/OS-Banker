@@ -155,7 +155,7 @@ bool isSafe(int* safeSequent) {
         for (int j = 0; j < p_num; j++) {
             if (finished[j] == false && isSmallerOrEqual(need[j], work)) {
                 i = j;
-                cout << "Need_" << i << " " << printArr(need[i], r_num) << " < Work " << printArr(work, r_num) << endl;
+                cout << "Need_" << i << " " << printArr(need[i], r_num) << " <= Work " << printArr(work, r_num) << endl;
                 break;
             }
         }
@@ -222,7 +222,7 @@ bool isSystemDeadlocking(bool *deadlockProcesses) {
         for (int j = 0; j < p_num; j++) {
             if (finish[j] == false && isSmallerOrEqual(request[j], work)) {
                 i = j;
-                cout << "Request_" << i << " " << printArr(request[i], r_num) << " < Work " << printArr(work, r_num) << endl;
+                cout << "Request_" << i << " " << printArr(request[i], r_num) << " <= Work " << printArr(work, r_num) << endl;
                 break;
             }
         }
@@ -234,14 +234,15 @@ bool isSystemDeadlocking(bool *deadlockProcesses) {
         finished_num++;
     }
     // Buoc 4
+    for (int i = 0; i < p_num; i++) {
+        deadlockProcesses[i] = finish[i];
+    }
     if (finished_num == p_num) return false;
-
-    deadlockProcesses = finish;
     return true;
 }
 
 int main() {
-    string fileName = "testBanker.txt";
+    string fileName = "testDeadlockDetect.txt";
     initProcessState(fileName);
     printSystemState();
 
@@ -289,7 +290,7 @@ int main() {
             cout << "\nP" << p  << " request is not accepted\n";
         }
     } else if (selection == 3) {
-        bool *deadlockProcesses;
+        bool *deadlockProcesses = new bool[p_num];
         if (!isSystemDeadlocking(deadlockProcesses)) {
             cout << "\nNo deadlock detected" << endl;
         } else {
