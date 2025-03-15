@@ -35,8 +35,18 @@ void addTo(int *work, int* b) {
 }
 void substractTo(int *a, int *b) {
     for (int i = 0; i < r_num; i++) {
-        a[i] - b[i];
+        a[i] = a[i] - b[i];
     }
+}
+
+string printArr(int *arr, int len) {
+    string str = "(";
+    for (int i = 0; i<len; i++) {
+        str += to_string(arr[i]);
+        if (i < len-1) str += ", ";
+    }
+    str+=")";
+    return str;
 }
 
 void initProcessState(string fileName) {
@@ -145,6 +155,7 @@ bool isSafe(int* safeSequent) {
         for (int j = 0; j < p_num; j++) {
             if (finished[j] == false && isSmallerOrEqual(need[j], work)) {
                 i = j;
+                cout << "Need_" << i << " " << printArr(need[i], r_num) << " < Work " << printArr(work, r_num) << endl;
                 break;
             }
         }
@@ -180,6 +191,8 @@ bool banker(int process, int *safeSeq) {
     addTo(allocation[process], request[process]);
     substractTo(need[process], request[process]);
 
+    cout << "If request is approved, then the new state will be:\n";
+    printSystemState();
     bool safe = isSafe(safeSeq);
     available = tmpAvailable;
     allocation = tmpAllocation;
@@ -209,6 +222,7 @@ bool isSystemDeadlocking(bool *deadlockProcesses) {
         for (int j = 0; j < p_num; j++) {
             if (finish[j] == false && isSmallerOrEqual(request[j], work)) {
                 i = j;
+                cout << "Request_" << i << " " << printArr(request[i], r_num) << " < Work " << printArr(work, r_num) << endl;
                 break;
             }
         }
